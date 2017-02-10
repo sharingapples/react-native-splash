@@ -8,6 +8,7 @@
       "exports": "only-multiline",
       "functions": "never"
     }],
-    "react/jsx-filename-extension": ["error", { "extensions": ["js", "jsx"] }]
+    "react/jsx-filename-extension": ["error", { "extensions": ["js", "jsx"] }],
+    "no-underscore-dangle": ["error", { "allowAfterThis": true }]
   }
 }

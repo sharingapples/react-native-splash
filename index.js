@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
+import Transition, { Flip } from 'react-native-transition';
+
 import DefaultSplashView from './src/SplashView';
 import DefaultErrorView from './src/ErrorView';
-
-import ViewTransition from './ViewTransition';
-
-const Transition = require('react-native-transition')();
 
 export default function (
   App,
@@ -32,64 +30,21 @@ export default function (
     componentWillMount() {
       // Start initializing all the initializers, with the message setter
       Promise.all(initializers.map(fn => fn(this.setMessage))).then(() => {
-        console.log('Initialized');
         // All initializers started, start the main app view
-        // Transition.push(<App />);
-
-        this.setState({
-          initialized: true,
-        });
-
-        //this._view.show(<App />);
-        // this.setState({
-        //   initialized: true,
-        // });
+        this._transition.add(<App />, { style: Flip });
       }).catch((err) => {
-        // this.setState({
-        //   error: err,
-        // });
+        this._transition.add(<ErrorView error={err} />, { style: Flip });
       });
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
-      if (nextState.initialized !== this.state.initialized) {
-        return true;
-      }
-
-      // If the app has already been initialized, it is not required to update the
-      // splash in any case. (Might happen due the the setMessage callback passed
-      // to the initializers)
-      if (this.state.initialized) {
-        return false;
-      }
-
-      return true;
-    }
-
     render() {
-      const { message, initialized } = this.state;
+      const { message } = this.state;
 
-      const child = initialized ? <App /> : <SplashView icon={options.icon} header={options.header} message={message} />;
-      console.log('Rendering', initialized);
       return (
-        <Transition>
-          {child}
+        <Transition ref={(node) => { this._transition = node; }} duration={1000}>
+          <SplashView icon={options.icon} header={options.header} message={message} />
         </Transition>
       );
-      // const { initialized, error, message } = this.state;
-
-      // // In case app is initialized, just render the app
-      // if (initialized) {
-      //   return <App />;
-      // }
-
-      // // In case of an error, display the error message
-      // if (error) {
-      //   return <ErrorView error={error} />;
-      // }
-
-      // // Display the splash screen with the message
-      // return <SplashView icon={options.icon} header={options.header} message={message} />;
     }
   };
 }
