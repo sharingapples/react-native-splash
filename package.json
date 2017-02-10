@@ -1,6 +1,6 @@
 {
   "name": "react-native-splash-js",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A splash screen implementation for react-native",
   "main": "index.js",
   "scripts": {
