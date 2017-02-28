@@ -1,13 +1,18 @@
 import React, { Component } from 'react';
-import Transition, { Flip } from 'react-native-transition';
+import { createTransition } from 'react-native-transition';
 
 import DefaultSplashView from './src/SplashView';
 import DefaultErrorView from './src/ErrorView';
 
+import PropsManager from './src/PropsManager';
+
+// Create the transition to switch over to the main application view
+const Transition = createTransition();
+
 export default function (
   App,
   initializers = [],
-  initialMessage = {},
+  initialMessage = null,
   options = {},
   CustomSplashView = null,
   CustomErrorView = null
@@ -20,7 +25,6 @@ export default function (
       message: initialMessage,
       initialized: false,
       error: null,
-      children: [],
     };
 
     setMessage = (message) => {
@@ -28,12 +32,14 @@ export default function (
     }
 
     componentWillMount() {
+      const propsManager = new PropsManager();
+
       // Start initializing all the initializers, with the message setter
-      Promise.all(initializers.map(fn => fn(this.setMessage))).then(() => {
+      Promise.all(initializers.map(fn => fn(propsManager, this.setMessage))).then(() => {
         // All initializers started, start the main app view
-        this._transition.add(<App />, { style: Flip });
+        Transition.show(<App {...propsManager.getAllProps()} />);
       }).catch((err) => {
-        this._transition.add(<ErrorView error={err} />, { style: Flip });
+        Transition.show(<ErrorView error={err} />);
       });
     }
 
@@ -41,7 +47,7 @@ export default function (
       const { message } = this.state;
 
       return (
-        <Transition ref={(node) => { this._transition = node; }} duration={1000}>
+        <Transition>
           <SplashView icon={options.icon} header={options.header} message={message} />
         </Transition>
       );

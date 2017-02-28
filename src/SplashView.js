@@ -32,6 +32,8 @@ export default function (options) {
 
     static defaultProps = {
       message: '',
+      header: null,
+      icon: false,
     };
 
     render() {
