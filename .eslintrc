@@ -9,7 +9,13 @@
       "exports": "only-multiline",
       "functions": "never"
     }],
-    "react/jsx-filename-extension": ["error", { "extensions": ["js", "jsx"] }],
-    "no-underscore-dangle": ["error", { "allowAfterThis": true }]
+    "no-underscore-dangle": ["error", { "allowAfterThis": true }],
+    "import/no-extraneous-dependencies": ["error", {
+      "devDependencies": true,
+      "peerDependencies": true
+    }],
+    "import/extensions": ["error", { "json": "always" }],
+    "import/no-unresolved": "off",
+    "react/jsx-filename-extension": ["error", { "extensions": ["js", "jsx"] }]
   }
 }
